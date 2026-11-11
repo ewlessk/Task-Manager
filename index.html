@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Task Manager</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>Task Manager</h1>
+    <p>Приложение для создания и управления списком задач</p>
+    <p>Всего задач: <span id="header-total">0</span></p>
+  </header>
+
+  <main>
+    <section>
+      <h2>Новая задача</h2>
+      <form id="task-form">
+        <label for="task-input">Название задачи</label>
+        <input id="task-input" type="text" placeholder="Что нужно сделать?">
+        <button type="submit">Добавить</button>
+        <p id="form-error" hidden></p>
+      </form>
+    </section>
+
+    <section>
+      <h2>Статистика</h2>
+      <ul>
+        <li>Всего задач: <span id="stats-total">0</span></li>
+        <li>Выполнено: <span id="stats-completed">0</span></li>
+        <li>Осталось: <span id="stats-active">0</span></li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Список задач</h2>
+      <ul id="task-list"></ul>
+      <p id="empty-message" hidden>Задач пока нет</p>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
