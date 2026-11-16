@@ -3,19 +3,16 @@ const tasks = [
     id: 1,
     title: "Прогуляться",
     isCompleted: false,
-    createdAt: new Date().toISOString(),
   },
   {
     id: 2,
     title: "Разобрать письма",
     isCompleted: true,
-    createdAt: new Date().toISOString(),
   },
   {
     id: 3,
     title: "Потренить",
     isCompleted: true,
-    createdAt: new Date().toISOString(),
   },
   //еще пару задач
 ];
@@ -29,10 +26,9 @@ const createTask = (title) => {
   }
 
   const newTask = {
-    id: generateId(),
+    id: tasks.length + 1,
     title: cleanTitle,
     isCompleted: false,
-    createdAt: new Date().toISOString(),
   };
 
   tasks.push(newTask);
