@@ -1,45 +1,57 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ru">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Task Manager</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-  <header>
-    <h1>Task Manager</h1>
-    <p>Приложение для создания и управления списком задач</p>
-    <p>Всего задач: <span id="header-total">0</span></p>
-  </header>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Task Manager</title>
+    <link rel="stylesheet" href="reset.css" />
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body>
+    <header>
+      <h1>Task Manager</h1>
+      <p>Приложение для создания и управления списком задач</p>
+      <p>Всего задач: <span id="header-total">0</span></p>
+    </header>
 
-  <main>
-    <section>
-      <h2>Новая задача</h2>
-      <form id="task-form">
-        <label for="task-input">Название задачи</label>
-        <input id="task-input" type="text" placeholder="Что нужно сделать?">
-        <button type="submit">Добавить</button>
-        <p id="form-error" hidden></p>
-      </form>
-    </section>
+    <main>
+      <section>
+        <h2>Новая задача</h2>
+        <form id="task-form" class="flex flex-wrap gap-2">
+          <label for="task-input">Название задачи</label>
+          <input
+            id="task-input"
+            type="text"
+            placeholder="Что нужно сделать?"
+            class="flex-1 border border-gray-300 rounded px-2 py-1"
+          />
+          <button
+            type="submit"
+            class="cursor-pointer rounded-[8px] bg-indigo-600 px-[20px] py-[8px] font-medium text-white shadow-sm transition hover:bg-indigo-700 active:scale-95"
+          >
+            Добавить
+          </button>
+          <p id="form-error" hidden></p>
+        </form>
+      </section>
 
-    <section>
-      <h2>Статистика</h2>
-      <ul>
-        <li>Всего задач: <span id="stats-total">0</span></li>
-        <li>Выполнено: <span id="stats-completed">0</span></li>
-        <li>Осталось: <span id="stats-active">0</span></li>
-      </ul>
-    </section>
+      <section>
+        <h2>Статистика</h2>
+        <ul class="stats">
+          <li>Всего задач: <span id="stats-total">0</span></li>
+          <li>Выполнено: <span id="stats-completed">0</span></li>
+          <li>Осталось: <span id="stats-active">0</span></li>
+        </ul>
+      </section>
 
-    <section>
-      <h2>Список задач</h2>
-      <ul id="task-list"></ul>
-      <p id="empty-message" hidden>Задач пока нет</p>
-    </section>
-  </main>
+      <section>
+        <h2>Список задач</h2>
+        <ul id="task-list" class="space-y-2"></ul>
+        <p id="empty-message" hidden>Задач пока нет</p>
+      </section>
+    </main>
 
-  <script src="script.js"></script>
-</body>
+    <script src="script.js"></script>
+  </body>
 </html>
