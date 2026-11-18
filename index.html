@@ -108,9 +108,10 @@
             class="flex items-center gap-3 rounded-xl border border-[var(--border-color)] bg-[#151215] p-4 transition hover:border-[var(--accent-color)]"
           >
             <input type="checkbox" class="mr-2" />
-            <span class="task-text"></span>
+            <span class="task-text min-w-0 flex-1 break-words"></span>
+
             <button
-              class="rounded-lg px-3 py-2 text-sm text-[#d76a78] transition hover:bg-[#852637]/20 hover:text-white"
+              class="ml-auto shrink-0 rounded-lg border border-[var(--border-color)] px-3 py-2 text-sm text-[#d76a78] transition hover:border-[var(--accent-color)] hover:bg-[#852637]/20 hover:text-white"
             >
               Удалить
             </button>
@@ -120,14 +121,23 @@
             class="flex items-center gap-3 rounded-xl border border-[var(--border-color)] bg-[#151215] p-4 transition hover:border-[var(--accent-color)]"
           >
             <input type="checkbox" class="mr-2" checked />
-            <span class="task-text line-through opacity-60"></span>
+            <span class="task-text min-w-0 flex-1 break-words"></span>
+
             <button
-              class="rounded-lg px-3 py-2 text-sm text-[#d76a78] transition hover:bg-[#852637]/20 hover:text-white"
+              class="ml-auto shrink-0 rounded-lg border border-[var(--border-color)] px-3 py-2 text-sm text-[#d76a78] transition hover:border-[var(--accent-color)] hover:bg-[#852637]/20 hover:text-white"
             >
               Удалить
             </button>
           </li>
+          <button
+            id="reset-button"
+            type="button"
+            class="mb-4 rounded-xl border border-[var(--border-color)] px-4 py-2 text-sm text-[var(--text-color)] transition hover:border-[var(--accent-color)] hover:bg-[var(--primary-color)]"
+          >
+            Сбросить
+          </button>
         </ul>
+
         <p id="empty-message" hidden>Задач пока нет</p>
       </section>
     </main>
