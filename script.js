@@ -1,3 +1,26 @@
+const taskForm = document.getElementById("task-form");
+const taskInput = document.getElementById("task-input");
+const formError = document.getElementById("form-error");
+
+const taskList = document.getElementById("task-list");
+const taskTemplate = document.getElementById("task-template");
+const taskTemplateCompleted = document.getElementById(
+  "task-template-completed",
+);
+
+const emptyMessage = document.getElementById("empty-message");
+const headerTotal = document.getElementById("header-total");
+const statsTotal = document.getElementById("stats-total");
+const statsCompleted = document.getElementById("stats-completed");
+const statsActive = document.getElementById("stats-active");
+const resetButton = document.getElementById("reset-button");
+
+console.log("Форма:", taskForm);
+console.log("Поле ввода:", taskInput);
+console.log("Список задач:", taskList);
+console.log("Шаблоны:", taskTemplate, taskTemplateCompleted);
+console.log("Статистика:", statsTotal, statsCompleted, statsActive);
+console.log("Кнопка сброса:", resetButton);
 const tasks = [
   {
     id: 1,
@@ -14,8 +37,9 @@ const tasks = [
     title: "Потренить",
     isCompleted: true,
   },
-  //еще пару задач
 ];
+console.log("массив в начале :", tasks);
+console.log("задачи:", tasks.length);
 
 const generateId = () => Date.now();
 
@@ -29,6 +53,7 @@ const createTask = (title) => {
     id: tasks.length + 1,
     title: cleanTitle,
     isCompleted: false,
+    date: new Date(),
   };
 
   tasks.push(newTask);
@@ -86,4 +111,25 @@ const searchTasks = (query) => {
 
   return { success: true, results };
 };
-//дописать сортировку через list нужна ли копия массива??????????
+const sortTasks = (tasksArray) => {
+  const tasksCopy = tasksArray;
+
+  tasksCopy.sort((a, b) => {
+    return a.title.localeCompare(b.title);
+  });
+
+  return tasksCopy;
+};
+const sortTasksByStatus = (tasksArray) => {
+  const tasksCopy = tasksArray;
+  tasksCopy.sort((a, b) => {
+    return Number(a.isCompleted) - Number(b.isCompleted);
+  });
+  return tasksCopy;
+};
+function createNewTask(tasksArray, newTask) {
+  tasks.unshift(newTask);
+  return tasksArray;
+}
+
+const resetFilters = () => tasks;
