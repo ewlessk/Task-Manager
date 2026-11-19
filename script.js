@@ -56,7 +56,7 @@ const createTask = (title) => {
     date: new Date(),
   };
 
-  tasks.push(newTask);
+  tasks.unshift(newTask);
   return { success: true, task: newTask };
 };
 const deleteTask = (id) => {
@@ -131,5 +131,24 @@ function createNewTask(tasksArray, newTask) {
   tasks.unshift(newTask);
   return tasksArray;
 }
+const renderTasks = () => {
+  const renderedTasks = taskList.querySelectorAll(
+    "li:not(#task-template):not(#task-template-completed)",
+  );
 
-const resetFilters = () => tasks;
+  renderedTasks.forEach((element) => {
+    element.remove();
+  });
+
+  tasks.forEach((task) => {
+    const taskElement = task.isCompleted
+      ? taskTemplateCompleted.cloneNode(true)
+      : taskTemplate.cloneNode(true);
+    taskElement.removeAttribute("hidden");
+    const taskText = taskElement.querySelector(".task-text");
+    taskText.textContent = task.title;
+
+    taskList.appendChild(taskElement);
+  });
+};
+renderTasks();

@@ -23,3 +23,55 @@ body {
   text-decoration: line-through;
   opacity: 0.6;
 }
+
+.task-checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  min-width: 0;
+  cursor: pointer;
+}
+
+.task-checkbox-label input[type="checkbox"] {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+}
+
+.task-checkbox-label .checkbox {
+  position: relative;
+  display: block;
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  border: 2px solid var(--accent-color);
+  border-radius: 6px;
+  transition: background-color 0.2s ease;
+}
+
+.task-checkbox-label .checkbox::after {
+  content: "";
+  position: absolute;
+  left: 6px;
+  top: 2px;
+  width: 6px;
+  height: 11px;
+  border: solid var(--accent-color);
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg) scale(0);
+  transition: transform 0.2s ease;
+}
+
+.task-checkbox-label input:checked + .checkbox::after {
+  transform: rotate(45deg) scale(1);
+}
+
+.task-checkbox-label input:focus-visible + .checkbox {
+  outline: 2px solid var(--accent-color);
+  outline-offset: 3px;
+}
+[hidden] {
+  display: none !important;
+}
