@@ -131,6 +131,22 @@ function createNewTask(tasksArray, newTask) {
   tasks.unshift(newTask);
   return tasksArray;
 }
+
+const updateStats = () => {
+  const { total, completed, active } = getStats();
+  headerTotal.textContent = `Всего задач: ${total}`;
+  statsTotal.textContent = `Всего задач: ${total}`;
+  statsCompleted.textContent = `Выполнено: ${completed}`;
+  statsActive.textContent = `Активные: ${active}`;
+};
+//проверка на наличие задач
+const checkEmptyMessage = () => {
+  if (tasks.length === 0) {
+    emptyMessage.removeAttribute("hidden");
+  } else {
+    emptyMessage.setAttribute("hidden", "");
+  }
+};
 const renderTasks = () => {
   const renderedTasks = taskList.querySelectorAll(
     "li:not(#task-template):not(#task-template-completed)",
@@ -145,10 +161,44 @@ const renderTasks = () => {
       ? taskTemplateCompleted.cloneNode(true)
       : taskTemplate.cloneNode(true);
     taskElement.removeAttribute("hidden");
+    taskElement.removeAttribute("id");
+    taskElement.dataset.id = task.id;
+
+    const checkbox = taskElement.querySelector("input[type='checkbox']");
+    checkbox.checked = task.isCompleted;
+    const deleteButton = taskElement.querySelector("button");
+    deleteButton.addEventListener("click", () => {
+      deleteTask(task.id);
+      renderTasks();
+    });
+    checkbox.addEventListener("change", () => {
+      toggleTaskStatus(task.id);
+      renderTasks();
+    });
     const taskText = taskElement.querySelector(".task-text");
     taskText.textContent = task.title;
 
     taskList.appendChild(taskElement);
   });
+  updateStats();
+  checkEmptyMessage();
 };
 renderTasks();
+// обработчик формы
+taskForm.addEventListener("submit", (event) => {
+  event.preventDefault();
+  const title = taskInput.value;
+  const result = createTask(title);
+  if (!result.success) {
+    formError.textContent = result.error;
+    return;
+  }
+  formError.textContent = "";
+  taskInput.value = "";
+  renderTasks();
+});
+// обработчик кнопки сброса
+resetButton.addEventListener("click", () => {
+  tasks.length = 0;
+  renderTasks();
+});
