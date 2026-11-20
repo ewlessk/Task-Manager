@@ -52,7 +52,7 @@
             </button>
           </div>
 
-          <p id="form-error" hidden></p>
+          <p id="form-error" class="text-sm text-[#d76a78]" hidden></p>
         </form>
       </section>
 
@@ -103,54 +103,30 @@
           Список задач
         </h2>
 
-        <ul id="task-list" class="space-y-3">
-          <li
-            id="task-template"
-            class="flex items-center gap-3 rounded-xl border border-[var(--border-color)] bg-[#151215] p-4 transition hover:border-[var(--accent-color)]"
-            hidden
-          >
-            <label class="task-checkbox-label flex-1 min-w-0">
-              <input type="checkbox" data-id="" />
-              <span class="checkbox"></span>
-              <span class="task-text"></span>
-            </label>
+        <input
+          id="search-input"
+          type="search"
+          placeholder="Поиск по названию"
+          class="mb-4 w-full rounded-xl border border-[var(--border-color)] bg-[#141114] px-4 py-3 text-[var(--text-color)] placeholder:text-[#777078] outline-none transition focus:border-[var(--accent-color)] focus:ring-2 focus:ring-[var(--accent-color)]/20"
+        />
 
-            <button
-              class="ml-auto shrink-0 rounded-lg border border-[var(--border-color)] px-3 py-2 text-sm text-[#d76a78] transition hover:border-[var(--accent-color)] hover:bg-[#852637]/20 hover:text-white"
-            >
-              Удалить
-            </button>
-          </li>
+        <ul id="task-list" class="space-y-3"></ul>
 
-          <li
-            id="task-template-completed"
-            hidden
-            class="flex items-center gap-3 rounded-xl border border-[var(--border-color)] bg-[#151215] p-4 transition hover:border-[var(--accent-color)]"
-            hidden
-          >
-            <label class="task-checkbox-label flex-1 min-w-0">
-              <input type="checkbox" data-id="" checked />
-              <span class="checkbox"></span>
-              <span class="task-text line-through opacity-60"></span>
-            </label>
-
-            <button
-              class="ml-auto shrink-0 rounded-lg border border-[var(--border-color)] px-3 py-2 text-sm text-[#d76a78] transition hover:border-[var(--accent-color)] hover:bg-[#852637]/20 hover:text-white"
-            >
-              Удалить
-            </button>
-          </li>
-        </ul>
+        <p
+          id="empty-message"
+          class="py-4 text-center text-[var(--muted-color)]"
+          hidden
+        >
+          Задач пока нет
+        </p>
 
         <button
           id="reset-button"
           type="button"
-          class="mb-4 rounded-xl border border-[var(--border-color)] px-4 py-2 text-sm text-[var(--text-color)] transition hover:border-[var(--accent-color)] hover:bg-[var(--primary-color)]"
+          class="mt-4 rounded-xl border border-[var(--border-color)] px-4 py-2 text-sm text-[var(--text-color)] transition hover:border-[var(--accent-color)] hover:bg-[var(--primary-color)]"
         >
           Сбросить
         </button>
-
-        <p id="empty-message" hidden>Задач пока нет</p>
       </section>
     </main>
 

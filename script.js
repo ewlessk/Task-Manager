@@ -1,26 +1,15 @@
 const taskForm = document.getElementById("task-form");
 const taskInput = document.getElementById("task-input");
 const formError = document.getElementById("form-error");
-
 const taskList = document.getElementById("task-list");
-const taskTemplate = document.getElementById("task-template");
-const taskTemplateCompleted = document.getElementById(
-  "task-template-completed",
-);
-
 const emptyMessage = document.getElementById("empty-message");
 const headerTotal = document.getElementById("header-total");
 const statsTotal = document.getElementById("stats-total");
 const statsCompleted = document.getElementById("stats-completed");
 const statsActive = document.getElementById("stats-active");
 const resetButton = document.getElementById("reset-button");
+const searchInput = document.getElementById("search-input");
 
-console.log("Форма:", taskForm);
-console.log("Поле ввода:", taskInput);
-console.log("Список задач:", taskList);
-console.log("Шаблоны:", taskTemplate, taskTemplateCompleted);
-console.log("Статистика:", statsTotal, statsCompleted, statsActive);
-console.log("Кнопка сброса:", resetButton);
 const tasks = [
   {
     id: 1,
@@ -38,8 +27,8 @@ const tasks = [
     isCompleted: true,
   },
 ];
-console.log("массив в начале :", tasks);
-console.log("задачи:", tasks.length);
+
+let searchQuery = "";
 
 const generateId = () => Date.now();
 
@@ -50,155 +39,152 @@ const createTask = (title) => {
   }
 
   const newTask = {
-    id: tasks.length + 1,
+    id: generateId(),
     title: cleanTitle,
     isCompleted: false,
-    date: new Date(),
   };
 
   tasks.unshift(newTask);
   return { success: true, task: newTask };
 };
+
 const deleteTask = (id) => {
   const index = tasks.findIndex((task) => task.id === id);
   if (index === -1) {
-    return { success: false, error: "задача не найдена" };
+    return { success: false, error: "Задача не найдена" };
   }
+
   tasks.splice(index, 1);
   return { success: true };
 };
+
 const toggleTaskStatus = (id) => {
-  const task = tasks.find((item) => item.id === id);
+  const task = getTaskById(id);
   if (!task) {
-    return { success: false, error: "нет задачи такой" };
+    return { success: false, error: "Задача не найдена" };
   }
+
   task.isCompleted = !task.isCompleted;
   return { success: true, task };
 };
+
 const getStats = () => {
   const total = tasks.length;
   const completed = tasks.filter((task) => task.isCompleted).length;
-  const active = total - completed;
-  return { total, completed, active };
+  return { total, completed, active: total - completed };
 };
+
 const getTasksByFilter = (filter) => {
   switch (filter) {
     case "completed":
       return tasks.filter((task) => task.isCompleted);
     case "active":
       return tasks.filter((task) => !task.isCompleted);
-    case "all":
     default:
       return tasks;
   }
 };
-const getTaskById = (id) => {
-  const task = tasks.find((item) => item.id === id);
-  if (!task) {
-    return { success: false, error: "задача не найдена" };
-  }
-  return { success: true, task };
-};
-const searchTasks = (query) => {
+
+const getTaskById = (id) => tasks.find((task) => task.id === id);
+
+const getTaskTitles = () => tasks.map((task) => task.title);
+
+const searchTasks = (list, query) => {
   const cleanQuery = query.trim().toLowerCase();
-  if (!cleanQuery) {
-    return { success: false, error: "Запрос не может быть пустым" };
-  }
-
-  const results = tasks.filter((task) =>
-    task.title.toLowerCase().includes(cleanQuery),
-  );
-
-  return { success: true, results };
+  return list.filter((task) => task.title.toLowerCase().includes(cleanQuery));
 };
-const sortTasks = (tasksArray) => {
-  const tasksCopy = tasksArray;
 
-  tasksCopy.sort((a, b) => {
-    return a.title.localeCompare(b.title);
-  });
+const sortTasks = (list) => list.sort((a, b) => a.title.localeCompare(b.title));
 
-  return tasksCopy;
+const sortTasksByStatus = (list) =>
+  list.sort((a, b) => Number(a.isCompleted) - Number(b.isCompleted));
+
+const createTaskElement = (task) => {
+  const li = document.createElement("li");
+  li.dataset.id = task.id;
+  li.className =
+    "flex items-center gap-3 rounded-xl border border-[var(--border-color)] bg-[#151215] p-4 transition hover:border-[var(--accent-color)]";
+
+  li.innerHTML = `
+    <label class="task-checkbox-label flex-1 min-w-0">
+      <input type="checkbox" ${task.isCompleted ? "checked" : ""} />
+      <span class="checkbox"></span>
+      <span class="task-text"></span>
+    </label>
+    <button
+      type="button"
+      data-action="delete"
+      class="ml-auto shrink-0 rounded-lg border border-[var(--border-color)] px-3 py-2 text-sm text-[#d76a78] transition hover:border-[var(--accent-color)] hover:bg-[#852637]/20 hover:text-white"
+    >
+      Удалить
+    </button>
+  `;
+
+  const taskText = li.querySelector(".task-text");
+  taskText.textContent = task.title;
+  taskText.classList.toggle("line-through", task.isCompleted);
+  taskText.classList.toggle("opacity-60", task.isCompleted);
+
+  return li;
 };
-const sortTasksByStatus = (tasksArray) => {
-  const tasksCopy = tasksArray;
-  tasksCopy.sort((a, b) => {
-    return Number(a.isCompleted) - Number(b.isCompleted);
-  });
-  return tasksCopy;
-};
-function createNewTask(tasksArray, newTask) {
-  tasks.unshift(newTask);
-  return tasksArray;
-}
 
 const updateStats = () => {
   const { total, completed, active } = getStats();
-  headerTotal.textContent = `Всего задач: ${total}`;
-  statsTotal.textContent = `Всего задач: ${total}`;
-  statsCompleted.textContent = `Выполнено: ${completed}`;
-  statsActive.textContent = `Активные: ${active}`;
+  headerTotal.textContent = total;
+  statsTotal.textContent = total;
+  statsCompleted.textContent = completed;
+  statsActive.textContent = active;
 };
-//проверка на наличие задач
-const checkEmptyMessage = () => {
-  if (tasks.length === 0) {
-    emptyMessage.removeAttribute("hidden");
-  } else {
-    emptyMessage.setAttribute("hidden", "");
-  }
-};
+
 const renderTasks = () => {
-  const renderedTasks = taskList.querySelectorAll(
-    "li:not(#task-template):not(#task-template-completed)",
-  );
-
-  renderedTasks.forEach((element) => {
-    element.remove();
-  });
-
-  tasks.forEach((task) => {
-    const taskElement = task.isCompleted
-      ? taskTemplateCompleted.cloneNode(true)
-      : taskTemplate.cloneNode(true);
-    taskElement.removeAttribute("hidden");
-    taskElement.removeAttribute("id");
-    taskElement.dataset.id = task.id;
-
-    const checkbox = taskElement.querySelector("input[type='checkbox']");
-    checkbox.checked = task.isCompleted;
-    const deleteButton = taskElement.querySelector("button");
-    deleteButton.addEventListener("click", () => {
-      deleteTask(task.id);
-      renderTasks();
-    });
-    checkbox.addEventListener("change", () => {
-      toggleTaskStatus(task.id);
-      renderTasks();
-    });
-    const taskText = taskElement.querySelector(".task-text");
-    taskText.textContent = task.title;
-
-    taskList.appendChild(taskElement);
-  });
+  const visibleTasks = searchTasks(tasks, searchQuery);
+  taskList.replaceChildren(...visibleTasks.map(createTaskElement));
   updateStats();
-  checkEmptyMessage();
+  emptyMessage.hidden = tasks.length > 0;
 };
-renderTasks();
-// обработчик формы
+
+// события
 taskForm.addEventListener("submit", (event) => {
   event.preventDefault();
-  const title = taskInput.value;
-  const result = createTask(title);
+
+  const result = createTask(taskInput.value);
   if (!result.success) {
     formError.textContent = result.error;
+    formError.hidden = false;
     return;
   }
-  formError.textContent = "";
+
+  formError.hidden = true;
   taskInput.value = "";
   renderTasks();
 });
-// обработчик кнопки сброса
+
+// поиск по буквам без нжимания кнопки
+searchInput.addEventListener("input", (event) => {
+  searchQuery = event.target.value;
+  renderTasks();
+});
+
+// делегирование событий на кнопки удаления и чекбоксы
+taskList.addEventListener("click", (event) => {
+  const deleteButton = event.target.closest("[data-action='delete']");
+  if (!deleteButton) return;
+
+  deleteTask(Number(deleteButton.closest("li").dataset.id));
+  renderTasks();
+});
+
+taskList.addEventListener("change", (event) => {
+  if (!event.target.matches("input[type='checkbox']")) return;
+
+  toggleTaskStatus(Number(event.target.closest("li").dataset.id));
+  renderTasks();
+});
+
 resetButton.addEventListener("click", () => {
   tasks.length = 0;
   renderTasks();
 });
+
+renderTasks();
+// фильтры и сортировка добавить

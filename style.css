@@ -19,11 +19,6 @@ body {
   min-height: var(--min-height);
 }
 
-.completed {
-  text-decoration: line-through;
-  opacity: 0.6;
-}
-
 .task-checkbox-label {
   display: flex;
   align-items: center;
