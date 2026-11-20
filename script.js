@@ -9,6 +9,8 @@ const statsCompleted = document.getElementById("stats-completed");
 const statsActive = document.getElementById("stats-active");
 const resetButton = document.getElementById("reset-button");
 const searchInput = document.getElementById("search-input");
+const filtersBox = document.getElementById("filters");
+const filterButtons = document.querySelectorAll("[data-filter]");
 
 const tasks = [
   {
@@ -29,6 +31,7 @@ const tasks = [
 ];
 
 let searchQuery = "";
+let currentFilter = "all";
 
 const generateId = () => Date.now();
 
@@ -137,8 +140,18 @@ const updateStats = () => {
 };
 
 const renderTasks = () => {
-  const visibleTasks = searchTasks(tasks, searchQuery);
+  const byFilter = getTasksByFilter(currentFilter);
+  const visibleTasks = searchTasks(byFilter, searchQuery);
+
   taskList.replaceChildren(...visibleTasks.map(createTaskElement));
+
+  filterButtons.forEach((button) => {
+    button.setAttribute(
+      "aria-pressed",
+      button.dataset.filter === currentFilter,
+    );
+  });
+
   updateStats();
   emptyMessage.hidden = tasks.length > 0;
 };
@@ -162,6 +175,14 @@ taskForm.addEventListener("submit", (event) => {
 // поиск по буквам без нжимания кнопки
 searchInput.addEventListener("input", (event) => {
   searchQuery = event.target.value;
+  renderTasks();
+});
+// переключение фильтров
+filtersBox.addEventListener("click", (event) => {
+  const button = event.target.closest("[data-filter]");
+  if (!button) return;
+
+  currentFilter = button.dataset.filter;
   renderTasks();
 });
 
