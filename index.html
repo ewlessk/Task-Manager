@@ -109,39 +109,67 @@
           placeholder="Поиск по названию"
           class="mb-4 w-full rounded-xl border border-[var(--border-color)] bg-[#141114] px-4 py-3 text-[var(--text-color)] placeholder:text-[#777078] outline-none transition focus:border-[var(--accent-color)] focus:ring-2 focus:ring-[var(--accent-color)]/20"
         />
-        <div id="filters" class="mb-4 flex flex-wrap gap-2">
-          <button
-            type="button"
-            data-filter="all"
-            class="rounded-xl border border-[var(--border-color)] px-4 py-2 text-sm text-[var(--text-color)] transition hover:border-[var(--accent-color)] aria-pressed:border-[var(--accent-color)] aria-pressed:bg-[var(--primary-color)]"
-          >
-            Все
-          </button>
-          <button
-            type="button"
-            data-filter="active"
-            class="rounded-xl border border-[var(--border-color)] px-4 py-2 text-sm text-[var(--text-color)] transition hover:border-[var(--accent-color)] aria-pressed:border-[var(--accent-color)] aria-pressed:bg-[var(--primary-color)]"
-          >
-            Активные
-          </button>
-          <button
-            type="button"
-            data-filter="completed"
-            class="rounded-xl border border-[var(--border-color)] px-4 py-2 text-sm text-[var(--text-color)] transition hover:border-[var(--accent-color)] aria-pressed:border-[var(--accent-color)] aria-pressed:bg-[var(--primary-color)]"
-          >
-            Выполненные
-          </button>
-        </div>
 
-        <ul id="task-list" class="space-y-3"></ul>
-
-        <p
-          id="empty-message"
-          class="py-4 text-center text-[var(--muted-color)]"
-          hidden
+        <fieldset
+          id="filters"
+          aria-label="Фильтр задач"
+          class="mb-4 flex flex-wrap gap-2"
         >
-          Задач пока нет
-        </p>
+          <label class="cursor-pointer">
+            <input
+              type="radio"
+              name="filter"
+              value="all"
+              class="peer sr-only"
+              checked
+            />
+            <span
+              class="block rounded-xl border border-[#4a3a40] bg-[#151215] px-4 py-2 text-sm text-[var(--text-color)] transition hover:border-[var(--accent-color)] peer-checked:border-[var(--accent-color)] peer-checked:bg-[var(--primary-color)] peer-focus-visible:border-[var(--accent-color)]"
+            >
+              Все
+            </span>
+          </label>
+
+          <label class="cursor-pointer">
+            <input
+              type="radio"
+              name="filter"
+              value="active"
+              class="peer sr-only"
+            />
+            <span
+              class="block rounded-xl border border-[#4a3a40] bg-[#151215] px-4 py-2 text-sm text-[var(--text-color)] transition hover:border-[var(--accent-color)] peer-checked:border-[var(--accent-color)] peer-checked:bg-[var(--primary-color)] peer-focus-visible:border-[var(--accent-color)]"
+            >
+              Активные
+            </span>
+          </label>
+
+          <label class="cursor-pointer">
+            <input
+              type="radio"
+              name="filter"
+              value="completed"
+              class="peer sr-only"
+            />
+            <span
+              class="block rounded-xl border border-[#4a3a40] bg-[#151215] px-4 py-2 text-sm text-[var(--text-color)] transition hover:border-[var(--accent-color)] peer-checked:border-[var(--accent-color)] peer-checked:bg-[var(--primary-color)] peer-focus-visible:border-[var(--accent-color)]"
+            >
+              Выполненные
+            </span>
+          </label>
+        </fieldset>
+
+        <div class="min-h-[200px]">
+          <ul id="task-list" class="space-y-3"></ul>
+
+          <p
+            id="empty-message"
+            class="py-4 text-center text-[var(--muted-color)]"
+            hidden
+          >
+            Задач пока нет
+          </p>
+        </div>
 
         <button
           id="reset-button"

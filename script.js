@@ -132,7 +132,12 @@ const createTaskElement = (task) => {
 
   return li;
 };
-
+const getEmptyText = (visibleCount) => {
+  if (visibleCount > 0) return "";
+  if (tasks.length === 0) return "Список пуст";
+  if (searchQuery.trim()) return "Ничего не найдено";
+  return "В этой категории пусто";
+};
 const updateStats = () => {
   const { total, completed, active } = getStats();
   headerTotal.textContent = total;
@@ -140,14 +145,18 @@ const updateStats = () => {
   statsCompleted.textContent = completed;
   statsActive.textContent = active;
 };
-
+const refreshChanges = () => {
+  updateStats();
+  renderTasks();
+};
 const renderTasks = () => {
   const byFilter = getTasksByFilter(currentFilter);
   const visibleTasks = searchTasks(byFilter, searchQuery);
 
   taskList.replaceChildren(...visibleTasks.map(createTaskElement));
-  updateStats();
-  emptyMessage.hidden = tasks.length > 0;
+  const emptyText = getEmptyText(visibleTasks.length);
+  emptyMessage.textContent = emptyText;
+  emptyMessage.hidden = !emptyText;
 };
 
 // события
@@ -163,7 +172,7 @@ taskForm.addEventListener("submit", (event) => {
 
   formError.hidden = true;
   taskInput.value = "";
-  renderTasks();
+  refreshChanges();
 });
 
 // поиск по буквам без нажатия кнопки
@@ -186,20 +195,20 @@ taskList.addEventListener("click", (event) => {
   if (!deleteButton) return;
 
   deleteTask(Number(deleteButton.closest("li").dataset.id));
-  renderTasks();
+  refreshChanges();
 });
 
 taskList.addEventListener("change", (event) => {
   if (!event.target.matches("input[type='checkbox']")) return;
 
   toggleTaskStatus(Number(event.target.closest("li").dataset.id));
-  renderTasks();
+  refreshChanges();
 });
 
 resetButton.addEventListener("click", () => {
   tasks.length = 0;
   nextId = 1;
-  renderTasks();
+  refreshChanges();
 });
 
-renderTasks();
+refreshChanges();
