@@ -102,7 +102,16 @@
         <h2 class="text-lg font-semibold text-[var(--text-color)] mb-5">
           Список задач
         </h2>
-
+        <div
+          class="mb-4 w-full rounded-xl border border-[var(--border-color)] bg-[#141114] px-4 py-3 text-[var(--text-color)] placeholder:text-[#777078] outline-none transition focus:border-[var(--accent-color)] focus:ring-2 focus:ring-[var(--accent-color)]/20"
+        >
+          <label for="sort-select">Сортировка:</label>
+          <select id="sort-select">
+            <option value="default">Без сортировки</option>
+            <option value="alphabetical">По алфавиту А–Я</option>
+            <option value="status">Сначала активные</option>
+          </select>
+        </div>
         <input
           id="search-input"
           type="search"

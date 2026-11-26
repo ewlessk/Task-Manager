@@ -10,7 +10,7 @@ const statsActive = document.getElementById("stats-active");
 const resetButton = document.getElementById("reset-button");
 const searchInput = document.getElementById("search-input");
 const filtersBox = document.getElementById("filters");
-
+const sortSelect = document.getElementById("sort-select");
 const tasks = [
   {
     id: 1,
@@ -31,6 +31,7 @@ const tasks = [
 
 let searchQuery = "";
 let currentFilter = "all";
+let currentSort = "default";
 
 let nextId =
   tasks.length > 0 ? Math.max(...tasks.map((task) => task.id)) + 1 : 1;
@@ -92,17 +93,36 @@ const getTasksByFilter = (filter) => {
 
 const getTaskById = (id) => tasks.find((task) => task.id === id);
 
-const getTaskTitles = () => tasks.map((task) => task.title);
-
 const searchTasks = (list, query) => {
   const cleanQuery = query.trim().toLowerCase();
   return list.filter((task) => task.title.toLowerCase().includes(cleanQuery));
 };
 
-const sortTasks = (list) => list.sort((a, b) => a.title.localeCompare(b.title));
+// мутация исходного масиива убрана 1
+const sortTasks = (list) => {
+  const sortedTasks = [...list];
 
-const sortTasksByStatus = (list) =>
-  list.sort((a, b) => Number(a.isCompleted) - Number(b.isCompleted));
+  return sortedTasks.sort((a, b) => a.title.localeCompare(b.title, "ru"));
+};
+
+const sortTasksByStatus = (list) => {
+  const sortedTasks = [...list];
+
+  return sortedTasks.sort(
+    (a, b) => Number(a.isCompleted) - Number(b.isCompleted),
+  );
+};
+//сортировка по алфавиту по статусу и дефолт список
+const getSortedTasks = (list, sort) => {
+  switch (sort) {
+    case "alphabetical":
+      return sortTasks(list);
+    case "status":
+      return sortTasksByStatus(list);
+    default:
+      return list;
+  }
+};
 
 const createTaskElement = (task) => {
   const li = document.createElement("li");
@@ -139,6 +159,7 @@ const getEmptyText = (visibleCount) => {
   return "В этой категории пусто";
 };
 const updateStats = () => {
+  // деструктуризация обьекта
   const { total, completed, active } = getStats();
   headerTotal.textContent = total;
   statsTotal.textContent = total;
@@ -151,9 +172,9 @@ const refreshChanges = () => {
 };
 const renderTasks = () => {
   const byFilter = getTasksByFilter(currentFilter);
-  const visibleTasks = searchTasks(byFilter, searchQuery);
-
-  taskList.replaceChildren(...visibleTasks.map(createTaskElement));
+  const visibleTasks = searchTasks(byFilter, searchQuery); //фильтр и посик
+  const sortedTasks = getSortedTasks(visibleTasks, currentSort);
+  taskList.replaceChildren(...sortedTasks.map(createTaskElement));
   const emptyText = getEmptyText(visibleTasks.length);
   emptyMessage.textContent = emptyText;
   emptyMessage.hidden = !emptyText;
@@ -180,6 +201,11 @@ searchInput.addEventListener("input", (event) => {
   searchQuery = event.target.value;
   renderTasks();
 });
+//сортировк
+sortSelect.addEventListener("change", (event) => {
+  currentSort = event.target.value;
+  renderTasks();
+});
 
 // переключение фильтров (radio)
 filtersBox.addEventListener("change", (event) => {
@@ -194,15 +220,21 @@ taskList.addEventListener("click", (event) => {
   const deleteButton = event.target.closest("[data-action='delete']");
   if (!deleteButton) return;
 
-  deleteTask(Number(deleteButton.closest("li").dataset.id));
-  refreshChanges();
+  const id = Number(deleteButton.closest("li").dataset.id);
+  const result = deleteTask(id);
+  if (result.success) {
+    refreshChanges();
+  }
 });
 
 taskList.addEventListener("change", (event) => {
   if (!event.target.matches("input[type='checkbox']")) return;
 
-  toggleTaskStatus(Number(event.target.closest("li").dataset.id));
-  refreshChanges();
+  const id = Number(event.target.closest("li").dataset.id);
+  const result = toggleTaskStatus(id);
+  if (result.success) {
+    refreshChanges();
+  }
 });
 
 resetButton.addEventListener("click", () => {
