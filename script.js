@@ -11,7 +11,7 @@ const resetButton = document.getElementById("reset-button");
 const searchInput = document.getElementById("search-input");
 const filtersBox = document.getElementById("filters");
 const sortSelect = document.getElementById("sort-select");
-const tasks = [
+const initialTasks = [
   {
     id: 1,
     title: "Прогуляться",
@@ -28,10 +28,11 @@ const tasks = [
     isCompleted: true,
   },
 ];
-
+let tasks = initialTasks.map((task) => ({ ...task }));
 let searchQuery = "";
 let currentFilter = "all";
 let currentSort = "default";
+let searchTimer;
 
 let nextId =
   tasks.length > 0 ? Math.max(...tasks.map((task) => task.id)) + 1 : 1;
@@ -197,9 +198,16 @@ taskForm.addEventListener("submit", (event) => {
 });
 
 // поиск по буквам без нажатия кнопки
+// Поиск с debounce
 searchInput.addEventListener("input", (event) => {
-  searchQuery = event.target.value;
-  renderTasks();
+  clearTimeout(searchTimer);
+
+  const query = event.target.value;
+
+  searchTimer = setTimeout(() => {
+    searchQuery = query;
+    renderTasks();
+  }, 300);
 });
 //сортировк
 sortSelect.addEventListener("change", (event) => {
@@ -238,8 +246,16 @@ taskList.addEventListener("change", (event) => {
 });
 
 resetButton.addEventListener("click", () => {
-  tasks.length = 0;
-  nextId = 1;
+  while (tasks.length > 0) {
+    tasks.pop();
+  }
+
+  initialTasks.forEach((task) => {
+    tasks.push({ ...task });
+  });
+
+  nextId = Math.max(...tasks.map((task) => task.id)) + 1;
+
   refreshChanges();
 });
 
